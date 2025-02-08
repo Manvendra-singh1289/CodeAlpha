@@ -1,0 +1,239 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+
+public class Quizz extends JFrame  implements ActionListener
+{
+    JLabel HLabel,label,ILabel1,ILabel2;
+    JPanel P1,P2;
+    JRadioButton radioButton[] = new JRadioButton[5];
+    JButton Next, Mark;
+    ButtonGroup bg;
+    int count = 0, current = 0;
+    int x = 1, y = 1, now = 0;
+    int m[] = new int[10];
+
+    Quizz()
+    {
+        Container c = getContentPane();
+        c.setLayout(null);
+        c.setBackground(Color.BLACK);
+    
+    
+        HLabel = new JLabel("Brain Tester");
+        HLabel.setForeground(Color.WHITE);
+        HLabel.setFont(new Font("times new roman",Font.BOLD,56));
+        HLabel.setBounds(850,0,600,100);
+    
+        P1 = new JPanel();
+        P1.setLayout(null);
+        P1.setBackground(Color.PINK);
+        P1.setBounds(0,0,600,1000);
+    
+        ImageIcon img = new ImageIcon("C:\\Users\\HARSHIT\\OneDrive\\Desktop\\Codesoft\\imgFile\\Quiz1.png");
+        ILabel1 = new JLabel(img);
+        ILabel1.setBounds(-50,100,700,500);
+    
+        bg = new ButtonGroup();
+        for(int i = 0; i<5 ; i++)
+        {
+            radioButton[i] = new JRadioButton();
+            add(radioButton[i]);
+            bg.add(radioButton[i]);
+        }
+    
+        Next = new JButton("NEXT");
+        Next.setBounds(750,500,200,50);
+    
+        Mark = new JButton("Don't Know");
+        Mark.setBounds(1050,500,200,50);
+    
+        label = new JLabel("");
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("times new roman",Font.BOLD,20));
+        label.setBounds(650,100,800,100);
+    
+        radioButton[0].setBounds(750, 180, 200, 20);
+        radioButton[1].setBounds(750, 210, 200, 20);
+        radioButton[2].setBounds(750, 240, 200, 20);
+        radioButton[3].setBounds(750, 270, 200, 20);
+
+    
+        add(HLabel);
+        add(label);
+        add(P1);
+        add(Next);
+        add(Mark);
+        set();
+        P1.add(ILabel1);
+        Next.addActionListener(this);
+        Mark.addActionListener(this);
+        
+    
+    
+        setSize(1600,800);
+        setTitle("Quiz Platform");
+        setLayout(null);
+        setVisible(true);
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        if(e.getSource() == Next)
+        {
+            if(check())
+            {
+                count = count + 1;
+            }
+            current++;
+            set();
+            if(current == 5)
+            {
+                Next.setEnabled(false);
+                Mark.setText("Result");
+            }
+        }
+        
+        if(e.getActionCommand().equals("Don't Know"))
+        {
+            JButton bk = new JButton("Don't Know" + x);
+            bk.setBounds(480, 20 + 30*x, 100, 30);
+            add(bk);
+            bk.addActionListener(this);
+            m[x] = current;
+            x++;
+            current++;
+            set();
+            if(current == 5)
+            {
+                Mark.setText("Result");
+            }
+            setVisible(false);
+            setVisible(true);
+        }
+        
+        for(int i = 0, y =1; i<x; i++,y++)
+        {
+            if(e.getActionCommand().equals("Bookmarks" + y))
+            {
+                if(check())
+                {
+                    count = count + i;
+                }
+                now = current;
+                current = m[y];
+                set();
+                ((JButton)e.getSource()).setEnabled(false);
+                current = now;
+            }
+        }
+        
+        if(e.getActionCommand().equals("Result"))
+        {
+            if(check())
+            {
+                count = count + 1;
+            }
+            current++;
+            JOptionPane.showMessageDialog(this, "Correct Answer = " + count);
+            System.exit(0);
+        }
+    }
+    
+    void set()
+    {
+        radioButton[4].setSelected(true);
+        if(current == 0)
+        {
+            label.setText("Q1) Which package contains the Random class?");
+            radioButton[0].setText("java.util package");
+            radioButton[1].setText("java.lang package");
+            radioButton[2].setText("java.awt package");
+            radioButton[3].setText("java.io package");
+        }
+        
+        if(current == 1)
+        {
+            label.setText("Q2)_____ is used to find and fix bugs in the Java programs.");
+            radioButton[0].setText("JVM");
+            radioButton[1].setText("JRE");
+            radioButton[2].setText("JDK");
+            radioButton[3].setText("JDB");
+        }
+        
+        if(current == 2)
+        {
+            label.setText("Q3) What is the return type of the hashCode() method in the Object class?");
+            radioButton[0].setText("Object");
+            radioButton[1].setText("int");
+            radioButton[2].setText("long");
+            radioButton[3].setText("void");
+        }
+        
+        if(current == 3)
+        {
+            label.setText("Q4)Evaluate the following Java expression, if x=3, y=5, and z=10:\r\n" + //
+                                "\r\n" + //
+                                "++z + y - y + z + x++");
+            radioButton[0].setText("24");
+            radioButton[1].setText("23");
+            radioButton[2].setText("20");
+            radioButton[3].setText("25");
+        }
+        
+        if(current == 4)
+        {
+            label.setText("Q5) Which of the following is true about the anonymous inner class?");
+            radioButton[0].setText("It has only methods");
+            radioButton[1].setText("Objects can't be created");
+            radioButton[2].setText("It has a fixed class name");
+            radioButton[3].setText("It has no class name");
+        }
+        
+        label.setBounds(650,100,800,100);
+        for(int i = 0, j = 0; i<=150; i+=50, j++)
+        {
+            radioButton[j].setBounds(700, 180 + i, 200, 20);
+        }
+    }
+    
+    boolean check()
+    {
+        if(current == 0)
+        {
+            return (radioButton[0].isSelected());
+        }
+        
+        if(current == 1)
+        {
+            return (radioButton[3].isSelected());
+        }
+        
+        if(current == 2)
+        {
+            return (radioButton[1].isSelected());
+        }
+        
+        if(current == 3)
+        {
+            return (radioButton[3].isSelected());
+        }
+        
+        if(current == 4)
+        {
+            return (radioButton[3].isSelected());
+        }
+        
+        return false;
+    }
+    
+
+    public static void main(String[] args)
+    {
+        new Quizz();
+    }
+}
